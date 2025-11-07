@@ -10,5 +10,6 @@ extension GameFeature {
         case selectSquare(Square)
         case move(from: Square, to: Square)
         case reset
+        case toggleBoardFlip(Bool)
     }
 }

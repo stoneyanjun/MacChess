@@ -7,12 +7,20 @@
 
 import SwiftUI
 import ComposableArchitecture
-
 struct GameView: View {
     let store: StoreOf<GameFeature>
 
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
+            // 🧩 Compute orientation-dependent labels
+            let files = viewStore.isBoardFlipped
+                ? ["h","g","f","e","d","c","b","a"]
+                : ["a","b","c","d","e","f","g","h"]
+
+            let ranks = viewStore.isBoardFlipped
+                ? Array(1...8)   // bottom→top = 1→8 when flipped
+                : Array((1...8).reversed()) // bottom→top = 8→1 normally
+
             HStack(spacing: 20) {
                 VStack(spacing: 12) {
                     Text("Turn: \(viewStore.currentTurn == .white ? "White" : "Black")")
@@ -22,25 +30,32 @@ struct GameView: View {
 
                     HStack {
                         Spacer()
-                        BoardView(store: store)
-                            .frame(width: 800, height: 800)
+                        BoardView(store: store, files: files, ranks: ranks)
+                            .frame(width: 640, height: 640)
                         Spacer()
                     }
 
                     Spacer()
 
-                    Button("Reset Game") {
-                        viewStore.send(.reset)
+                    HStack(spacing: 20) {
+                        Button("Reset Game") {
+                            viewStore.send(.reset)
+                        }
+                        .keyboardShortcut("r", modifiers: [.command])
+
+                        Button("Flip Board") {
+                            viewStore.send(.toggleBoardFlip(!viewStore.isBoardFlipped))
+                        }
+                        .disabled(viewStore.hasStarted)
                     }
-                    .keyboardShortcut("r", modifiers: [.command])
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(nsColor: .windowBackgroundColor))
                 .padding()
 
-                // 🆕 Move history on right side
                 MoveHistoryView(store: store)
             }
+            .padding()
         }
     }
 }

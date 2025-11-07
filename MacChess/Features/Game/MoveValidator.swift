@@ -9,30 +9,24 @@ import Foundation
 
 struct MoveValidator {
 
-    /// Validates a move for the given piece, board state, and current turn.
     static func isValidMove(
         board: [[Piece?]],
         from: Square,
         to: Square,
         currentTurn: PieceColor
     ) -> Bool {
-        // Check there is a piece at the source square
         guard let piece = board[from.row][from.col] else { return false }
         if from == to { return false }
 
-        // ✅ Turn enforcement
         if piece.color != currentTurn {
-            // Trying to move opponent's piece
             return false
         }
 
-        // Prevent capturing own piece
         if let targetPiece = board[to.row][to.col],
            targetPiece.color == piece.color {
             return false
         }
 
-        // Dispatch piece-type rules
         switch piece.type {
         case .pawn:
             return validatePawn(board: board, from: from, to: to, piece: piece)

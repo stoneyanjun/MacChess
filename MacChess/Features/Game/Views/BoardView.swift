@@ -4,13 +4,14 @@
 //
 //  Created by stone on 2025/11/7.
 //
+
 import SwiftUI
 import ComposableArchitecture
 
 struct BoardView: View {
     let store: StoreOf<GameFeature>
-    private let files = ["a","b","c","d","e","f","g","h"]
-    private let ranks = Array(1...8)
+    let files: [String]
+    let ranks: [Int]
 
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
@@ -19,27 +20,32 @@ struct BoardView: View {
                 let squareSize = boardSize / 8
 
                 VStack(spacing: 0) {
+                    // Main board area
                     HStack(spacing: 0) {
                         // Left rank labels
                         VStack(spacing: 0) {
-                            ForEach(ranks.reversed(), id: \.self) { rank in
+                            ForEach(ranks, id: \.self) { rank in
                                 Text("\(rank)")
                                     .font(.system(size: 12, weight: .bold))
                                     .frame(width: 20, height: squareSize)
                             }
                         }
 
-                        // Main board
+                        // 8×8 Squares
                         VStack(spacing: 0) {
-                            ForEach((0..<8).reversed(), id: \.self) { row in
+                            ForEach(ranks.indices, id: \.self) { rIndex in
+                                let row = viewStore.isBoardFlipped ? rIndex : (7 - rIndex)
                                 HStack(spacing: 0) {
-                                    ForEach(0..<8, id: \.self) { col in
+                                    ForEach(0..<8, id: \.self) { cIndex in
+                                        let col = viewStore.isBoardFlipped ? (7 - cIndex) : cIndex
                                         let square = Square(row: row, col: col)
                                         let piece = viewStore.board[row][col]
+
                                         SquareView(
                                             square: square,
                                             piece: piece,
-                                            isSelected: square == viewStore.selectedSquare
+                                            isSelected: square == viewStore.selectedSquare,
+                                            isFlipped: viewStore.isBoardFlipped
                                         )
                                         .frame(width: squareSize, height: squareSize)
                                         .onTapGesture {
@@ -53,8 +59,7 @@ struct BoardView: View {
 
                     // Bottom file labels
                     HStack(spacing: 0) {
-                        Text(" ") // left margin align with rank labels
-                            .frame(width: 20)
+                        Text(" ").frame(width: 20)
                         ForEach(files, id: \.self) { file in
                             Text(file)
                                 .font(.system(size: 12, weight: .bold))

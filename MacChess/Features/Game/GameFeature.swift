@@ -68,12 +68,17 @@ struct GameFeature: Reducer {
             
             return .none
             
+        case .toggleBoardFlip(let flipped):
+            state.isBoardFlipped = flipped
+            return .none
+
         case .reset:
             state.board = GameFeature.initialBoard()
             state.selectedSquare = nil
             state.currentTurn = .white
             state.moveHistory = []        // 🆕 clear move history
             state.moveNumber = 1          // 🆕 reset move counter
+            state.isBoardFlipped = false  
             return .none
             
         }

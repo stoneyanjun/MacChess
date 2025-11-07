@@ -11,7 +11,8 @@ struct SquareView: View {
     let square: Square
     let piece: Piece?
     let isSelected: Bool
-
+    let isFlipped: Bool 
+    
     var body: some View {
         ZStack {
             Rectangle()
@@ -21,7 +22,7 @@ struct SquareView: View {
                     .stroke(Color.yellow, lineWidth: 3)
             }
             if let piece = piece {
-                PieceView(piece: piece)
+                PieceView(piece: piece, isFlipped: isFlipped)
             }
         }
     }

@@ -15,5 +15,11 @@ extension GameFeature {
         
         var moveHistory: [MoveRecord] = []
         var moveNumber: Int = 1
+        
+        var isBoardFlipped: Bool = false
+        
+        var hasStarted: Bool {
+            !moveHistory.isEmpty
+        }
     }
 }
