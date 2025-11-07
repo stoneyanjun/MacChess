@@ -39,13 +39,13 @@ struct GameFeature: Reducer {
                 state.selectedSquare = nil
                 return .none
             }
-            
+
             guard let piece = state.board[from.row][from.col] else { return .none }
-            
+
             // Perform move
             state.board[to.row][to.col] = piece
             state.board[from.row][from.col] = nil
-            
+
             // Record move
             let notation = GameFeature.notation(for: piece, from: from, to: to)
             let record = MoveRecord(
@@ -56,16 +56,18 @@ struct GameFeature: Reducer {
                 notation: notation
             )
             state.moveHistory.append(record)
-            
-            // Increment move number after black’s move
-            if state.currentTurn == .black {
-                state.moveNumber += 1
-            }
-            
-            // Switch turn
+
+            // Update move number and turn
+            if state.currentTurn == .black { state.moveNumber += 1 }
             state.currentTurn = (state.currentTurn == .white) ? .black : .white
             state.selectedSquare = nil
-            
+
+            // 🧠 Send move to Stockfish
+//            let moves = state.moveHistory.map { $0.uciString.lowercased() }
+//            Task {
+//                await GameFeature.State.sharedEngine.analyze(positionFEN: "startpos", moves: moves)
+//            }
+
             return .none
             
         case .toggleBoardFlip(let flipped):

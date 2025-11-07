@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+
 struct GameView: View {
     let store: StoreOf<GameFeature>
 
@@ -14,14 +15,14 @@ struct GameView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             // 🧩 Compute orientation-dependent labels
             let files = viewStore.isBoardFlipped
-                ? ["h","g","f","e","d","c","b","a"]
-                : ["a","b","c","d","e","f","g","h"]
+                ? ["a","b","c","d","e","f","g","h"] : ["h","g","f","e","d","c","b","a"]
 
             let ranks = viewStore.isBoardFlipped
-                ? Array(1...8)   // bottom→top = 1→8 when flipped
-                : Array((1...8).reversed()) // bottom→top = 8→1 normally
+            ? Array((1...8).reversed()) : Array(1...8)
 
             HStack(spacing: 20) {
+//                AISuggestionView()
+                
                 VStack(spacing: 12) {
                     Text("Turn: \(viewStore.currentTurn == .white ? "White" : "Black")")
                         .font(.headline)

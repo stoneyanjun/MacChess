@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// A lightweight but correct chess move validator for all standard pieces.
+/// It enforces turn-based color logic and disallows backward pawn moves.
 struct MoveValidator {
 
     static func isValidMove(
@@ -18,15 +20,18 @@ struct MoveValidator {
         guard let piece = board[from.row][from.col] else { return false }
         if from == to { return false }
 
+        // 🧠 must move your own color
         if piece.color != currentTurn {
             return false
         }
 
+        // 🚫 cannot capture your own piece
         if let targetPiece = board[to.row][to.col],
            targetPiece.color == piece.color {
             return false
         }
 
+        // 🎯 dispatch by piece type
         switch piece.type {
         case .pawn:
             return validatePawn(board: board, from: from, to: to, piece: piece)
@@ -50,17 +55,28 @@ struct MoveValidator {
         let dy = to.row - from.row
         let dx = to.col - from.col
 
-        // Forward move
+        // 🚫 Prevent backward move
+        if (piece.color == .white && dy >= 0) || (piece.color == .black && dy <= 0) {
+            return false
+        }
+
+        // Forward move (no capture)
         if dx == 0 {
-            if dy == dir, board[to.row][to.col] == nil { return true }
-            if from.row == startRow, dy == 2 * dir,
+            // Move 1 step forward
+            if dy == dir, board[to.row][to.col] == nil {
+                return true
+            }
+
+            // Move 2 steps from starting position
+            if from.row == startRow,
+               dy == 2 * dir,
                board[from.row + dir][to.col] == nil,
                board[to.row][to.col] == nil {
                 return true
             }
         }
 
-        // Capture
+        // Capture diagonally
         if abs(dx) == 1, dy == dir {
             if let target = board[to.row][to.col], target.color != piece.color {
                 return true

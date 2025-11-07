@@ -23,3 +23,7 @@ extension GameFeature {
         }
     }
 }
+
+extension GameFeature.State {
+//    @MainActor static let sharedEngine = StockfishEngine()
+}

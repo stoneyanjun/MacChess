@@ -15,3 +15,12 @@ struct MoveRecord: Identifiable, Equatable {
     let to: Square
     let notation: String
 }
+
+extension MoveRecord {
+    var uciString: String {
+        let files = ["a","b","c","d","e","f","g","h"]
+        let fromStr = "\(files[from.col])\(from.row + 1)"
+        let toStr = "\(files[to.col])\(to.row + 1)"
+        return fromStr + toStr
+    }
+}
