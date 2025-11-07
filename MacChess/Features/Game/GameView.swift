@@ -14,7 +14,7 @@ struct GameView: View {
 
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack(spacing: 16) {
+            VStack(spacing: 4) {
 
                 // --- 1️⃣ Turn indicator ---
                 Text("\(viewStore.currentTurn.displayName)'s turn")
@@ -22,7 +22,7 @@ struct GameView: View {
                     .foregroundColor(viewStore.currentTurn == .white ? .primary : .gray)
 
                 // --- 2️⃣ Main play area ---
-                HStack(alignment: .top, spacing: 4) {
+                HStack(alignment: .top, spacing: 2) {
 
                     // Left: Suggestion
                     SuggestionView(
@@ -48,7 +48,7 @@ struct GameView: View {
                         }
 
                         HStack(spacing: 0) {
-                            Spacer().frame(width: 20)
+                            Spacer().frame(width: 4)
                             ForEach(fileLabels, id: \.self) { file in
                                 Text(file)
                                     .font(.system(size: 18, weight: .medium))
@@ -65,7 +65,7 @@ struct GameView: View {
                             .padding(.top, 4)
                         Divider()
                         MoveHistoryView(moves: viewStore.moveHistory)
-                            .frame(minWidth: 120, maxWidth: 220, maxHeight: 640)
+                            .frame(minWidth: 120, maxWidth: 120, maxHeight: 640)
                     }
                     .frame(height: 640)
                     .background(Color(NSColor.textBackgroundColor))
@@ -74,7 +74,7 @@ struct GameView: View {
                 }
 
                 // --- 3️⃣ Bottom controls ---
-                VStack(spacing: 5) {
+                VStack(spacing: 12) {
                     HStack {
                         Toggle("Human vs AI", isOn: viewStore.binding(
                             get: \.isHumanVsAI,
@@ -89,10 +89,7 @@ struct GameView: View {
                         ))
                         .toggleStyle(.switch)
                         .frame(width: 120)
-                    }
-
-                    HStack {
-                        Spacer()
+                        
                         Button {
                             viewStore.send(.restart)
                         } label: {
@@ -105,7 +102,6 @@ struct GameView: View {
                 }
                 .padding(.top, 8)
             }
-            .padding(16)
             .background(Color(NSColor.windowBackgroundColor))
             .onAppear {
                 viewStore.send(.onAppear)
