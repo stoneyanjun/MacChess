@@ -22,7 +22,7 @@ struct GameView: View {
                     .foregroundColor(viewStore.currentTurn == .white ? .primary : .gray)
 
                 // --- 2️⃣ Main play area ---
-                HStack(alignment: .top, spacing: 12) {
+                HStack(alignment: .top, spacing: 4) {
 
                     // Left: Suggestion
                     SuggestionView(
@@ -65,7 +65,7 @@ struct GameView: View {
                             .padding(.top, 4)
                         Divider()
                         MoveHistoryView(moves: viewStore.moveHistory)
-                            .frame(minWidth: 180, maxWidth: 220, maxHeight: 640)
+                            .frame(minWidth: 120, maxWidth: 220, maxHeight: 640)
                     }
                     .frame(height: 640)
                     .background(Color(NSColor.textBackgroundColor))
@@ -74,21 +74,21 @@ struct GameView: View {
                 }
 
                 // --- 3️⃣ Bottom controls ---
-                VStack(spacing: 10) {
+                VStack(spacing: 5) {
                     HStack {
                         Toggle("Human vs AI", isOn: viewStore.binding(
                             get: \.isHumanVsAI,
                             send: GameAction.toggleHumanVsAI
                         ))
                         .toggleStyle(.switch)
-                        .frame(width: 160)
+                        .frame(width: 120)
 
                         Toggle("AI plays White", isOn: viewStore.binding(
                             get: \.isAIPlayingWhite,
                             send: GameAction.toggleAIPlayingWhite
                         ))
                         .toggleStyle(.switch)
-                        .frame(width: 160)
+                        .frame(width: 120)
                     }
 
                     HStack {

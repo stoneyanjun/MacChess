@@ -35,7 +35,7 @@ struct SuggestionView: View {
             Spacer()
         }
         .padding(8)
-        .frame(minWidth: 180, maxWidth: 220, maxHeight: 640)
+        .frame(minWidth: 120, maxWidth: 180, maxHeight: 640)
         .background(Color(NSColor.textBackgroundColor))
         .cornerRadius(8)
         .shadow(radius: 1)
