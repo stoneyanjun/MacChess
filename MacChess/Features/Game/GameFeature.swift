@@ -19,10 +19,12 @@ struct GameFeature: Reducer, Sendable {
 
     func reduce(into state: inout State, action: Action) -> Effect<Action> {
         switch action {
-
+            
         case .onAppear:
             state = GameState()
-            return .none
+            return .run { _ in
+                await engine.start()
+            }
 
         case let .selectSquare(square):
             if state.selectedSquare == nil {

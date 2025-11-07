@@ -2,44 +2,57 @@
 //  StockfishEngine.swift
 //  MacChess
 //
-//  Stage 5.1: Parse Stockfish output and return EngineSuggestion.
+//  Stage 5.3 – Fixes actor isolation (await readLines) and async stop()
 //
 
 import Foundation
 import Dependencies
 
 extension DependencyValues {
-    /// Direct dependency access to the StockfishEngine actor instance.
     var stockfishEngine: StockfishEngine {
         get { self[StockfishEngineKey.self] }
         set { self[StockfishEngineKey.self] = newValue }
     }
 }
 
-/// TCA dependency key that stores a single StockfishEngine actor instance.
 private enum StockfishEngineKey: DependencyKey {
-    static let liveValue: StockfishEngine = StockfishEngine()
-    static let previewValue: StockfishEngine = StockfishEngine()
-    static let testValue: StockfishEngine = StockfishEngine()
+    static let liveValue = StockfishEngine()
+    static let previewValue = StockfishEngine()
+    static let testValue = StockfishEngine()
 }
 
+/// High-level Stockfish controller used by GameFeature via TCA Dependency.
 actor StockfishEngine {
     private let process = StockfishProcess()
+    private var isStarted = false
 
-    // MARK: - Public API
+    // MARK: - Lifecycle
     func start() async {
-        do { try await process.start() }
-        catch { print("⚠️ Failed to start Stockfish:", error) }
-    }
-
-    func stop() {
-        Task {
-            await process.stop()
+        guard !isStarted else {
+            print("⚙️ [StockfishEngine] Already started.")
+            return
+        }
+        do {
+            try await process.start()
+            isStarted = true
+        } catch {
+            print("❌ [StockfishEngine] Failed to start Stockfish: \(error)")
         }
     }
 
-    /// Analyze the current game and return best move suggestion.
-    func analyze(moves: [MoveRecord], depth: Int = 22) async -> EngineSuggestion? {
+    func stop() async {
+        await process.stop()
+        isStarted = false
+    }
+
+    // MARK: - Analysis
+    func analyze(moves: [MoveRecord], depth: Int = 18) async -> EngineSuggestion? {
+        guard isStarted else {
+            print("⚠️ [StockfishEngine] Engine not started, starting now…")
+            await start()
+            return nil
+        }
+
         let moveString = moves.map(\.notation).joined(separator: " ")
         let positionCmd = "position startpos moves \(moveString)"
 
@@ -47,7 +60,7 @@ actor StockfishEngine {
             try await process.send(positionCmd)
             try await process.send("go depth \(depth)")
         } catch {
-            print("⚠️ Failed to send command:", error)
+            print("❌ [StockfishEngine] Failed to send command: \(error)")
             return nil
         }
 
@@ -55,42 +68,45 @@ actor StockfishEngine {
         var currentScore: Int?
         var currentPV: [String] = []
 
-        // ✅ Capture the stream first (requires await)
+        // ✅ Await the stream once, then iterate
         let stream = await process.readLines()
-
-        // ✅ Then iterate
         for await line in stream {
             if line.hasPrefix("info ") {
                 let parts = line.split(separator: " ")
+
                 if let depthIdx = parts.firstIndex(of: "depth"),
                    depthIdx + 1 < parts.count,
-                   let depth = Int(parts[depthIdx + 1]) {
-                    currentDepth = depth
+                   let depthVal = Int(parts[depthIdx + 1]) {
+                    currentDepth = depthVal
                 }
+
                 if let scoreIdx = parts.firstIndex(of: "cp"),
                    scoreIdx + 1 < parts.count,
-                   let score = Int(parts[scoreIdx + 1]) {
-                    currentScore = score
+                   let scoreVal = Int(parts[scoreIdx + 1]) {
+                    currentScore = scoreVal
                 }
-                if let pvIdx = parts.firstIndex(of: "pv"), pvIdx + 1 < parts.count {
+
+                if let pvIdx = parts.firstIndex(of: "pv"),
+                   pvIdx + 1 < parts.count {
                     currentPV = parts[(pvIdx + 1)...].map(String.init)
                 }
-            } else if line.hasPrefix("bestmove") {
+            }
+            else if line.hasPrefix("bestmove") {
                 let parts = line.split(separator: " ")
-                if parts.count >= 2 {
-                    let move = String(parts[1])
-                    let suggestion = EngineSuggestion(
-                        bestMove: move,
-                        pv: currentPV,
-                        score: currentScore,
-                        depth: currentDepth
-                    )
-                    print("💡 Stockfish suggestion: \(suggestion)")
-                    return suggestion
-                }
+                guard parts.count >= 2 else { continue }
+                let move = String(parts[1])
+                let suggestion = EngineSuggestion(
+                    bestMove: move,
+                    pv: currentPV,
+                    score: currentScore,
+                    depth: currentDepth
+                )
+                print("💡 [StockfishEngine] Best move: \(move) | score: \(currentScore ?? 0) | depth: \(currentDepth)")
+                return suggestion
             }
         }
 
+        print("⚠️ [StockfishEngine] No suggestion received (stream ended).")
         return nil
     }
 }
