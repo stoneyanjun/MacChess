@@ -8,7 +8,7 @@
 import Foundation
 
 /// The TCA-managed state for the Game feature.
-/// Wraps the domain-level `GameStatus` and adds UI/turn information.
+/// Stage Three (extended): adds move history for Stockfish-compatible notation.
 struct GameState: Equatable, Sendable {
 
     // MARK: - Domain model
@@ -18,6 +18,10 @@ struct GameState: Equatable, Sendable {
     // MARK: - Gameplay control
     /// Whose turn it is to move (white starts first).
     var currentTurn: PieceColor = .white
+
+    /// The current full-move index (increments after each black move).
+    /// Starts from 1 per chess convention.
+    var moveIndex: Int = 1
 
     // MARK: - UI interaction
     /// The currently selected square, if any.
@@ -29,12 +33,18 @@ struct GameState: Equatable, Sendable {
     /// Whether to flash or show an invalid move indicator.
     var invalidMoveFlash: Bool = false
 
+    // MARK: - Move history
+    /// List of all recorded moves (in order), e.g. "e2e4", "e7e5"
+    var moveHistory: [MoveRecord] = []
+
     // MARK: - Initialization
     init() {
         self.gameStatus = GameStatus()
         self.currentTurn = .white
+        self.moveIndex = 1
         self.selectedSquare = nil
         self.highlightSquares = []
         self.invalidMoveFlash = false
+        self.moveHistory = []
     }
 }

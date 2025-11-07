@@ -9,7 +9,7 @@ import Foundation
 import ComposableArchitecture
 
 /// The TCA reducer for the Game feature.
-/// Stage Two: handles piece selection, movement, validation, and turn control.
+/// Stage Three (extended): adds move recording and index control.
 struct GameFeature: Reducer, Sendable {
 
     // MARK: - Associated types
@@ -24,36 +24,30 @@ struct GameFeature: Reducer, Sendable {
         // 1️⃣  Initialize game on appear
         // ------------------------------------------------------------
         case .onAppear:
-            state = GameState()            // reset entire game
+            state = GameState()
             return .none
 
         // ------------------------------------------------------------
         // 2️⃣  User clicked a square
         // ------------------------------------------------------------
         case let .selectSquare(square):
-            // If no selection yet → try selecting a piece
             if state.selectedSquare == nil {
                 guard let piece = state.gameStatus.board.piece(at: square),
                       piece.color == state.currentTurn else {
-                    return .none   // either empty square or wrong color
+                    return .none
                 }
-
-                // Select this piece and compute its valid targets
                 state.selectedSquare = square
                 state.highlightSquares = generateLegalMoves(for: square, in: state)
                 return .none
             }
 
-            // If a piece is already selected
             let from = state.selectedSquare!
-            //  Clicking same square again → cancel selection
             if square == from {
                 state.selectedSquare = nil
                 state.highlightSquares = []
                 return .none
             }
 
-            //  Otherwise → attempt a move
             return .send(.attemptMove(from: from, to: square))
 
         // ------------------------------------------------------------
@@ -62,7 +56,6 @@ struct GameFeature: Reducer, Sendable {
         case let .attemptMove(from, to):
             let board = state.gameStatus.board
             let color = state.currentTurn
-
             if MoveValidator.isLegalMove(board: board, from: from, to: to, color: color) {
                 return .send(.moveAccepted(from: from, to: to))
             } else {
@@ -70,10 +63,27 @@ struct GameFeature: Reducer, Sendable {
             }
 
         // ------------------------------------------------------------
-        // 4️⃣  Apply valid move
+        // 4️⃣  Apply valid move & record history
         // ------------------------------------------------------------
         case let .moveAccepted(from, to):
+            // Apply move
             state.gameStatus.move(from: from, to: to)
+
+            // Record move in Stockfish-compatible format
+            let record = MoveRecord(
+                index: state.moveIndex,
+                color: state.currentTurn,
+                from: from,
+                to: to
+            )
+            state.moveHistory.append(record)
+
+            // Advance move index only after black’s move
+            if state.currentTurn == .black {
+                state.moveIndex += 1
+            }
+
+            // Switch turn and reset UI state
             state.currentTurn.toggle()
             state.selectedSquare = nil
             state.highlightSquares = []
@@ -85,7 +95,6 @@ struct GameFeature: Reducer, Sendable {
         // ------------------------------------------------------------
         case .invalidMove:
             state.invalidMoveFlash = true
-            // keep selection, do not toggle turn
             return .none
 
         // ------------------------------------------------------------
@@ -100,7 +109,7 @@ struct GameFeature: Reducer, Sendable {
         }
     }
 
-    // MARK: - Helper: generate list of valid targets for selected piece
+    // MARK: - Helper: generate list of valid targets
     private func generateLegalMoves(for from: Square, in state: State) -> [Square] {
         var moves: [Square] = []
         for rank in 0..<8 {
