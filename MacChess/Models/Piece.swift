@@ -61,13 +61,10 @@ extension PieceColor {
 
     /// Display name for UI.
     var displayName: String {
-        switch self {
-        case .white: return "White"
-        case .black: return "Black"
-        }
+        self == .white ? "White" : "Black"
     }
 
-    /// Non-mutating toggle version (useful in pure contexts).
+    /// Non-mutating toggle version.
     var toggled: PieceColor {
         self == .white ? .black : .white
     }
@@ -75,7 +72,7 @@ extension PieceColor {
 
 // MARK: - Image asset name mapping
 extension Piece {
-    /// The asset name for this piece, based on color and type.
+    /// The asset name for this piece, matching your PNG files in Assets.xcassets.
     var assetName: String {
         switch (color, type) {
         case (.white, .pawn):   return "white_pawn"

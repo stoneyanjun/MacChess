@@ -12,17 +12,20 @@ struct PieceView: View {
     let piece: Piece
 
     var body: some View {
-        // Try to load the image asset; fallback to text symbol if missing
-        if let image = NSImage(named: piece.assetName) {
+        if let image = NSImage(named: NSImage.Name(piece.assetName)) {
             Image(nsImage: image)
                 .resizable()
+                .interpolation(.high)
+                .antialiased(true)
                 .scaledToFit()
                 .padding(4)
                 .accessibilityLabel(Text("\(piece.color.displayName) \(piece.type.rawValue)"))
         } else {
+            // Fallback to Unicode symbol if asset missing
             Text(piece.symbol)
                 .font(.system(size: 28))
                 .padding(4)
+                .accessibilityLabel(Text("\(piece.color.displayName) \(piece.type.rawValue)"))
         }
     }
 }
