@@ -7,12 +7,33 @@
 
 import Foundation
 
-/// Represents a single chess piece on the board.
-struct Piece: Equatable, Codable, Sendable {
-    let type: PieceType
-    let color: PieceColor
+/// The color of a chess piece.
+enum PieceColor: String, Codable, Equatable, Sendable {
+    case white
+    case black
+}
 
-    /// Human-readable symbol (♙, ♘, ♗, etc.)
+/// The type of a chess piece.
+enum PieceType: String, Codable, Equatable, Sendable, CaseIterable {
+    case pawn
+    case rook
+    case knight
+    case bishop
+    case queen
+    case king
+}
+
+/// Represents a chess piece (type + color).
+struct Piece: Codable, Equatable, Sendable {
+    var type: PieceType
+    var color: PieceColor
+
+    init(_ type: PieceType, _ color: PieceColor) {
+        self.type = type
+        self.color = color
+    }
+
+    /// A readable symbol for text-based debugging.
     var symbol: String {
         switch (color, type) {
         case (.white, .pawn):   return "♙"
@@ -29,42 +50,46 @@ struct Piece: Equatable, Codable, Sendable {
         case (.black, .king):   return "♚"
         }
     }
-
-    /// Asset name for image lookup (e.g., "white_rook").
-    var assetName: String {
-        "\(color.rawValue)_\(type.rawValue)"
-    }
 }
 
-/// The six fundamental chess piece types.
-enum PieceType: String, Codable, CaseIterable, Equatable, Sendable {
-    case king
-    case queen
-    case rook
-    case bishop
-    case knight
-    case pawn
-}
-
-/// Indicates which side the piece belongs to.
-enum PieceColor: String, Codable, CaseIterable, Equatable, Sendable {
-    case white
-    case black
-
-    /// Opponent color convenience.
-    var opponent: PieceColor {
-        self == .white ? .black : .white
-    }
-}
-
+// MARK: - Helpers
 extension PieceColor {
-    /// Switches turn between white and black.
+    /// Toggle the color (white ↔ black).
     mutating func toggle() {
         self = (self == .white) ? .black : .white
     }
 
-    /// A user-friendly name for display.
+    /// Display name for UI.
     var displayName: String {
-        self == .white ? "White" : "Black"
+        switch self {
+        case .white: return "White"
+        case .black: return "Black"
+        }
+    }
+
+    /// Non-mutating toggle version (useful in pure contexts).
+    var toggled: PieceColor {
+        self == .white ? .black : .white
+    }
+}
+
+// MARK: - Image asset name mapping
+extension Piece {
+    /// The asset name for this piece, based on color and type.
+    var assetName: String {
+        switch (color, type) {
+        case (.white, .pawn):   return "white_pawn"
+        case (.white, .rook):   return "white_rook"
+        case (.white, .knight): return "white_knight"
+        case (.white, .bishop): return "white_bishop"
+        case (.white, .queen):  return "white_queen"
+        case (.white, .king):   return "white_king"
+        case (.black, .pawn):   return "black_pawn"
+        case (.black, .rook):   return "black_rook"
+        case (.black, .knight): return "black_knight"
+        case (.black, .bishop): return "black_bishop"
+        case (.black, .queen):  return "black_queen"
+        case (.black, .king):   return "black_king"
+        }
     }
 }
