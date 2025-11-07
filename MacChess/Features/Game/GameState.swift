@@ -8,7 +8,7 @@
 import Foundation
 
 /// The TCA-managed state for the Game feature.
-/// Stage Three (extended): adds move history for Stockfish-compatible notation.
+/// Stage 5.1: extends Stage 3 with Stockfish engine suggestion results.
 struct GameState: Equatable, Sendable {
 
     // MARK: - Domain model
@@ -30,12 +30,19 @@ struct GameState: Equatable, Sendable {
     /// The valid target squares for the selected piece.
     var highlightSquares: [Square] = []
 
-    /// Whether to flash or show an invalid move indicator.
+    /// Whether to flash or show an invalid-move indicator.
     var invalidMoveFlash: Bool = false
 
     // MARK: - Move history
-    /// List of all recorded moves (in order), e.g. "e2e4", "e7e5"
+    /// List of all recorded moves (in order), e.g. "e2e4", "e7e5".
     var moveHistory: [MoveRecord] = []
+
+    // MARK: - Engine integration (Stage 5.1)
+    /// Latest Stockfish suggestion result.
+    var lastEngineSuggestion: EngineSuggestion?
+
+    /// Indicates whether an engine analysis is currently running.
+    var isAnalyzing: Bool = false
 
     // MARK: - Initialization
     init() {
@@ -46,5 +53,7 @@ struct GameState: Equatable, Sendable {
         self.highlightSquares = []
         self.invalidMoveFlash = false
         self.moveHistory = []
+        self.lastEngineSuggestion = nil
+        self.isAnalyzing = false
     }
 }

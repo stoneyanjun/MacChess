@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 /// The main chessboard screen.
-/// Stage Three: adds MoveHistoryView on the right side of the board.
+/// Stage 5.1: adds Reset button below the play area.
 struct GameView: View {
     let store: StoreOf<GameFeature>
 
@@ -19,7 +19,7 @@ struct GameView: View {
 
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            VStack(spacing: 12) {
+            VStack(spacing: 16) {
 
                 // --- 1️⃣ Turn indicator ---
                 Text("\(viewStore.currentTurn.displayName)'s turn")
@@ -74,6 +74,20 @@ struct GameView: View {
                     .cornerRadius(8)
                     .shadow(radius: 1)
                 }
+
+                // --- 3️⃣ Bottom controls ---
+                HStack {
+                    Spacer()
+                    Button {
+                        viewStore.send(.restart)
+                    } label: {
+                        Label("Reset", systemImage: "arrow.counterclockwise")
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                }
+                .padding(.top, 8)
             }
             .padding(16)
             .background(Color(NSColor.windowBackgroundColor))
