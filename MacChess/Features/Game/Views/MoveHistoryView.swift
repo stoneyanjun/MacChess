@@ -19,13 +19,13 @@ struct MoveHistoryView: View {
                 ForEach(groupedMoves(), id: \.0) { index, pair in
                     HStack {
                         Text("\(index).")
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.system(size: 16, weight: .bold))
                             .frame(width: 24, alignment: .trailing)
                         Text(pair.white ?? "")
-                            .font(.system(size: 13))
+                            .font(.system(size: 16))
                             .frame(width: 48, alignment: .leading)
                         Text(pair.black ?? "")
-                            .font(.system(size: 13))
+                            .font(.system(size: 16))
                             .frame(width: 48, alignment: .leading)
                         Spacer()
                     }

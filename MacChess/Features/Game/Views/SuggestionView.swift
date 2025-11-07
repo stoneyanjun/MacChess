@@ -23,18 +23,10 @@ struct SuggestionView: View {
                     .progressViewStyle(.linear)
                     .frame(maxWidth: .infinity)
             } else if let suggestion = suggestion {
-                Text("Best move: \(suggestion.bestMove)")
-                    .font(.system(size: 24, weight: .semibold))
+                Text("\(suggestion.bestMove)")
+                    .font(.system(size: 32, weight: .semibold))
                     .foregroundColor(.primary)
                     .padding(.vertical, 4)
-                if let score = suggestion.score {
-                    Text("Score: \(score)")
-                        .font(.system(size: 14))
-                        .foregroundColor(.secondary)
-                }
-                Text("Depth: \(suggestion.depth)")
-                    .font(.system(size: 12))
-                    .foregroundColor(.secondary)
             } else {
                 Text("No suggestion yet.")
                     .font(.system(size: 14))
