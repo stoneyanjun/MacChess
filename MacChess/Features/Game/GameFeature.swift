@@ -8,8 +8,7 @@
 import Foundation
 import ComposableArchitecture
 
-/// The TCA reducer for the Game feature.
-/// Stage 5.1 + Logging: integrates Stockfish engine and prints all moves sent.
+/// Stage 5.5: integrates Stockfish engine + Human-vs-AI auto move logic.
 struct GameFeature: Reducer, Sendable {
 
     typealias State = GameState
@@ -20,12 +19,18 @@ struct GameFeature: Reducer, Sendable {
     func reduce(into state: inout State, action: Action) -> Effect<Action> {
         switch action {
             
+        // ------------------------------------------------------------
+        // 1️⃣ Initialize
+        // ------------------------------------------------------------
         case .onAppear:
             state = GameState()
             return .run { _ in
                 await engine.start()
             }
 
+        // ------------------------------------------------------------
+        // 2️⃣ User selects squares
+        // ------------------------------------------------------------
         case let .selectSquare(square):
             if state.selectedSquare == nil {
                 guard let piece = state.gameStatus.board.piece(at: square),
@@ -42,6 +47,9 @@ struct GameFeature: Reducer, Sendable {
             }
             return .send(.attemptMove(from: from, to: square))
 
+        // ------------------------------------------------------------
+        // 3️⃣ Attempt a move
+        // ------------------------------------------------------------
         case let .attemptMove(from, to):
             let board = state.gameStatus.board
             let color = state.currentTurn
@@ -51,69 +59,130 @@ struct GameFeature: Reducer, Sendable {
                 return .send(.invalidMove(from: from, to: to))
             }
 
+        // ------------------------------------------------------------
+        // 4️⃣ Apply valid move & record history
+        // ------------------------------------------------------------
         case let .moveAccepted(from, to):
+            // Apply move
             state.gameStatus.move(from: from, to: to)
-            let record = MoveRecord(index: state.moveIndex, color: state.currentTurn, from: from, to: to)
+
+            // Record move
+            let record = MoveRecord(
+                index: state.moveIndex,
+                color: state.currentTurn,
+                from: from,
+                to: to
+            )
             state.moveHistory.append(record)
+
+            // Update turn
             if state.currentTurn == .black { state.moveIndex += 1 }
             state.currentTurn.toggle()
             state.selectedSquare = nil
             state.highlightSquares = []
             state.invalidMoveFlash = false
-            state.isAnalyzing = true
-            return .send(.requestEngineSuggestion)
 
+            // 如果是人机对战，自动让 AI 思考
+            if state.isHumanVsAI {
+                let aiColor = state.isAIPlayingWhite ? PieceColor.white : PieceColor.black
+                if state.currentTurn == aiColor {
+                    state.isAnalyzing = true
+                    return .send(.requestEngineSuggestion)
+                }
+            }
+
+            return .none
+
+        // ------------------------------------------------------------
+        // 5️⃣ Invalid move
+        // ------------------------------------------------------------
         case .invalidMove:
             state.invalidMoveFlash = true
             return .none
 
         // ------------------------------------------------------------
-        // 🔍 Engine: request analysis (with move logging)
+        // 6️⃣ Ask Stockfish for suggestion
         // ------------------------------------------------------------
         case .requestEngineSuggestion:
             state.isAnalyzing = true
             return .run { [moves = state.moveHistory] send in
                 let moveString = moves.map(\.notation).joined(separator: " ")
                 print("📤 Sending moves to Stockfish: \(moveString.isEmpty ? "(startpos)" : moveString)")
-                let suggestion = await engine.analyze(moves: moves, depth: 22)
+                let suggestion = await engine.analyze(moves: moves, depth: 18)
                 await send(.receiveEngineSuggestion(suggestion))
             }
 
+        // ------------------------------------------------------------
+        // 7️⃣ Receive Stockfish suggestion
+        // ------------------------------------------------------------
         case let .receiveEngineSuggestion(suggestion):
             state.isAnalyzing = false
             state.lastEngineSuggestion = suggestion
-            if let s = suggestion {
-                print("💡 Stockfish best move: \(s.bestMove) score: \(s.score ?? 0) depth: \(s.depth)")
-            } else {
+
+            guard let suggestion = suggestion else {
                 print("⚠️ No suggestion received from Stockfish.")
+                return .none
             }
+
+            print("💡 Stockfish best move: \(suggestion.bestMove) score: \(suggestion.score ?? 0) depth: \(suggestion.depth)")
+
+            // ✅ 如果当前是人机对战并轮到AI，直接落子
+            if state.isHumanVsAI {
+                let aiColor = state.isAIPlayingWhite ? PieceColor.white : PieceColor.black
+                if state.currentTurn == aiColor {
+                    let move = suggestion.bestMove
+                    // 解析 "e2e4" -> from("e2"), to("e4")
+                    if move.count == 4 {
+                        let fromStr = String(move.prefix(2))
+                        let toStr = String(move.suffix(2))
+                        if let from = Square(notation: fromStr),
+                           let to = Square(notation: toStr) {
+                            print("🤖 AI auto move: \(move)")
+                            return .send(.moveAccepted(from: from, to: to))
+                        }
+                    }
+                }
+            }
+
             return .none
 
+        // ------------------------------------------------------------
+        // 8️⃣ Toggles
+        // ------------------------------------------------------------
+        case let .toggleHumanVsAI(isOn):
+            state.isHumanVsAI = isOn
+            print("🤖 Human vs AI: \(isOn)")
+            return .none
+
+        case let .toggleAIPlayingWhite(isWhite):
+            state.isAIPlayingWhite = isWhite
+            print("♟️ AI plays \(isWhite ? "White" : "Black")")
+            return .none
+
+        // ------------------------------------------------------------
+        // 9️⃣ Restart
+        // ------------------------------------------------------------
         case .restart:
             state = GameState()
             return .none
 
         case .undo, .internalError:
             return .none
-            
-        case let .toggleHumanVsAI(isOn):
-            state.isHumanVsAI = isOn
-            print("🤖 Human vs AI mode: \(isOn ? "ON" : "OFF")")
-            return .none
-
-        case let .toggleAIPlayingWhite(isWhite):
-            state.isAIPlayingWhite = isWhite
-            print("♟️ AI plays: \(isWhite ? "White" : "Black")")
-            return .none
         }
     }
 
+    // MARK: - Helper
     private func generateLegalMoves(for from: Square, in state: State) -> [Square] {
         var moves: [Square] = []
         for rank in 0..<8 {
             for file in 0..<8 {
                 let to = Square(file: file, rank: rank)
-                if MoveValidator.isLegalMove(board: state.gameStatus.board, from: from, to: to, color: state.currentTurn) {
+                if MoveValidator.isLegalMove(
+                    board: state.gameStatus.board,
+                    from: from,
+                    to: to,
+                    color: state.currentTurn
+                ) {
                     moves.append(to)
                 }
             }

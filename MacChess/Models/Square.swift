@@ -2,28 +2,49 @@
 //  Square.swift
 //  MacChess
 //
-//  Created by stone on 2025/11/07.
+//  Created by stone on 2025/11/08.
 //
 
 import Foundation
 
-/// Represents a coordinate on the chessboard (file + rank).
-struct Square: Hashable, Codable, Sendable {
-    /// File index (0–7) → a–h.
-    let file: Int
-    /// Rank index (0–7) → 1–8.
-    let rank: Int
+/// A coordinate on the chessboard, file [a–h] and rank [1–8].
+struct Square: Codable, Hashable, Equatable, Sendable {
+    let file: Int   // 0 = a, 7 = h
+    let rank: Int   // 0 = 1, 7 = 8
 
-    /// Standard algebraic notation, e.g. "a1", "e4".
-    var notation: String {
-        let fileLetter = Square.fileLetters[file]
-        let rankNumber = rank + 1
-        return "\(fileLetter)\(rankNumber)"
+    // Existing initializer
+    init(file: Int, rank: Int) {
+        self.file = file
+        self.rank = rank
     }
 
-    /// Convenience constants for file → letter mapping.
-    static let fileLetters: [String] = ["a","b","c","d","e","f","g","h"]
+    // ✅ New convenience initializer from algebraic notation ("e2")
+    init?(notation: String) {
+        guard notation.count == 2 else { return nil }
 
+        let chars = Array(notation.lowercased())
+        guard let fileChar = chars.first,
+              let rankChar = chars.last,
+              fileChar >= "a", fileChar <= "h",
+              rankChar >= "1", rankChar <= "8"
+        else { return nil }
+
+        // Convert 'a'→0, 'b'→1, … 'h'→7
+        let fileIndex = Int(fileChar.asciiValue! - Character("a").asciiValue!)
+        // Convert '1'→0, '2'→1, … '8'→7
+        let rankIndex = Int(rankChar.asciiValue! - Character("1").asciiValue!)
+
+        self.file = fileIndex
+        self.rank = rankIndex
+    }
+
+    // (Optional) Utility to convert back to "e2"
+    var notation: String {
+        let fileChar = Character(UnicodeScalar(file + 97)!) // 97 = 'a'
+        let rankChar = Character(UnicodeScalar(rank + 49)!) // 49 = '1'
+        return "\(fileChar)\(rankChar)"
+    }
+    
     /// Returns whether the square should be dark or light,
     /// according to chess convention (a1 = dark).
     var isDark: Bool {
