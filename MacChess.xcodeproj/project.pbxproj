@@ -7,92 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BB59018C2EBCCA910085F965 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = BB59018B2EBCCA910085F965 /* ComposableArchitecture */; };
+		BB5902002EBDBDDC0085F965 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = BB5901FF2EBDBDDC0085F965 /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		BB5901602EBCC92C0085F965 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BB5901482EBCC92A0085F965 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BB59014F2EBCC92A0085F965;
-			remoteInfo = MacChess;
-		};
-		BB59016A2EBCC92C0085F965 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BB5901482EBCC92A0085F965 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BB59014F2EBCC92A0085F965;
-			remoteInfo = MacChess;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		BB5901502EBCC92A0085F965 /* MacChess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacChess.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		BB59015F2EBCC92C0085F965 /* MacChessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacChessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BB5901692EBCC92C0085F965 /* MacChessUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacChessUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB5901EA2EBDBDA60085F965 /* MacChess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacChess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		BB5901522EBCC92A0085F965 /* MacChess */ = {
+		BB5901EC2EBDBDA60085F965 /* MacChess */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = MacChess;
-			sourceTree = "<group>";
-		};
-		BB5901622EBCC92C0085F965 /* MacChessTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MacChessTests;
-			sourceTree = "<group>";
-		};
-		BB59016C2EBCC92C0085F965 /* MacChessUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MacChessUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BB59014D2EBCC92A0085F965 /* Frameworks */ = {
+		BB5901E72EBDBDA60085F965 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB59018C2EBCCA910085F965 /* ComposableArchitecture in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB59015C2EBCC92C0085F965 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB5901662EBCC92C0085F965 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				BB5902002EBDBDDC0085F965 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BB5901472EBCC92A0085F965 = {
+		BB5901E12EBDBDA60085F965 = {
 			isa = PBXGroup;
 			children = (
-				BB5901522EBCC92A0085F965 /* MacChess */,
-				BB5901622EBCC92C0085F965 /* MacChessTests */,
-				BB59016C2EBCC92C0085F965 /* MacChessUITests */,
-				BB5901512EBCC92A0085F965 /* Products */,
+				BB5901EC2EBDBDA60085F965 /* MacChess */,
+				BB5901EB2EBDBDA60085F965 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		BB5901512EBCC92A0085F965 /* Products */ = {
+		BB5901EB2EBDBDA60085F965 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BB5901502EBCC92A0085F965 /* MacChess.app */,
-				BB59015F2EBCC92C0085F965 /* MacChessTests.xctest */,
-				BB5901692EBCC92C0085F965 /* MacChessUITests.xctest */,
+				BB5901EA2EBDBDA60085F965 /* MacChess.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,138 +53,68 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BB59014F2EBCC92A0085F965 /* MacChess */ = {
+		BB5901E92EBDBDA60085F965 /* MacChess */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BB5901732EBCC92C0085F965 /* Build configuration list for PBXNativeTarget "MacChess" */;
+			buildConfigurationList = BB5901F52EBDBDA80085F965 /* Build configuration list for PBXNativeTarget "MacChess" */;
 			buildPhases = (
-				BB59014C2EBCC92A0085F965 /* Sources */,
-				BB59014D2EBCC92A0085F965 /* Frameworks */,
-				BB59014E2EBCC92A0085F965 /* Resources */,
+				BB5901E62EBDBDA60085F965 /* Sources */,
+				BB5901E72EBDBDA60085F965 /* Frameworks */,
+				BB5901E82EBDBDA60085F965 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				BB5901522EBCC92A0085F965 /* MacChess */,
+				BB5901EC2EBDBDA60085F965 /* MacChess */,
 			);
 			name = MacChess;
 			packageProductDependencies = (
-				BB59018B2EBCCA910085F965 /* ComposableArchitecture */,
+				BB5901FF2EBDBDDC0085F965 /* ComposableArchitecture */,
 			);
 			productName = MacChess;
-			productReference = BB5901502EBCC92A0085F965 /* MacChess.app */;
+			productReference = BB5901EA2EBDBDA60085F965 /* MacChess.app */;
 			productType = "com.apple.product-type.application";
-		};
-		BB59015E2EBCC92C0085F965 /* MacChessTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BB5901762EBCC92C0085F965 /* Build configuration list for PBXNativeTarget "MacChessTests" */;
-			buildPhases = (
-				BB59015B2EBCC92C0085F965 /* Sources */,
-				BB59015C2EBCC92C0085F965 /* Frameworks */,
-				BB59015D2EBCC92C0085F965 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				BB5901612EBCC92C0085F965 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				BB5901622EBCC92C0085F965 /* MacChessTests */,
-			);
-			name = MacChessTests;
-			packageProductDependencies = (
-			);
-			productName = MacChessTests;
-			productReference = BB59015F2EBCC92C0085F965 /* MacChessTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		BB5901682EBCC92C0085F965 /* MacChessUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = BB5901792EBCC92C0085F965 /* Build configuration list for PBXNativeTarget "MacChessUITests" */;
-			buildPhases = (
-				BB5901652EBCC92C0085F965 /* Sources */,
-				BB5901662EBCC92C0085F965 /* Frameworks */,
-				BB5901672EBCC92C0085F965 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				BB59016B2EBCC92C0085F965 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				BB59016C2EBCC92C0085F965 /* MacChessUITests */,
-			);
-			name = MacChessUITests;
-			packageProductDependencies = (
-			);
-			productName = MacChessUITests;
-			productReference = BB5901692EBCC92C0085F965 /* MacChessUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		BB5901482EBCC92A0085F965 /* Project object */ = {
+		BB5901E22EBDBDA60085F965 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
-					BB59014F2EBCC92A0085F965 = {
+					BB5901E92EBDBDA60085F965 = {
 						CreatedOnToolsVersion = 26.1;
-					};
-					BB59015E2EBCC92C0085F965 = {
-						CreatedOnToolsVersion = 26.1;
-						TestTargetID = BB59014F2EBCC92A0085F965;
-					};
-					BB5901682EBCC92C0085F965 = {
-						CreatedOnToolsVersion = 26.1;
-						TestTargetID = BB59014F2EBCC92A0085F965;
 					};
 				};
 			};
-			buildConfigurationList = BB59014B2EBCC92A0085F965 /* Build configuration list for PBXProject "MacChess" */;
+			buildConfigurationList = BB5901E52EBDBDA60085F965 /* Build configuration list for PBXProject "MacChess" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = BB5901472EBCC92A0085F965;
+			mainGroup = BB5901E12EBDBDA60085F965;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				BB59018A2EBCCA910085F965 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				BB5901FE2EBDBDDC0085F965 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = BB5901512EBCC92A0085F965 /* Products */;
+			productRefGroup = BB5901EB2EBDBDA60085F965 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BB59014F2EBCC92A0085F965 /* MacChess */,
-				BB59015E2EBCC92C0085F965 /* MacChessTests */,
-				BB5901682EBCC92C0085F965 /* MacChessUITests */,
+				BB5901E92EBDBDA60085F965 /* MacChess */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		BB59014E2EBCC92A0085F965 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB59015D2EBCC92C0085F965 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB5901672EBCC92C0085F965 /* Resources */ = {
+		BB5901E82EBDBDA60085F965 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -241,21 +124,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		BB59014C2EBCC92A0085F965 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB59015B2EBCC92C0085F965 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BB5901652EBCC92C0085F965 /* Sources */ = {
+		BB5901E62EBDBDA60085F965 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -264,21 +133,8 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		BB5901612EBCC92C0085F965 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BB59014F2EBCC92A0085F965 /* MacChess */;
-			targetProxy = BB5901602EBCC92C0085F965 /* PBXContainerItemProxy */;
-		};
-		BB59016B2EBCC92C0085F965 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BB59014F2EBCC92A0085F965 /* MacChess */;
-			targetProxy = BB59016A2EBCC92C0085F965 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		BB5901712EBCC92C0085F965 /* Debug */ = {
+		BB5901F32EBDBDA80085F965 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -342,7 +198,7 @@
 			};
 			name = Debug;
 		};
-		BB5901722EBCC92C0085F965 /* Release */ = {
+		BB5901F42EBDBDA80085F965 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -398,7 +254,7 @@
 			};
 			name = Release;
 		};
-		BB5901742EBCC92C0085F965 /* Debug */ = {
+		BB5901F62EBDBDA80085F965 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -412,7 +268,6 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -432,7 +287,7 @@
 			};
 			name = Debug;
 		};
-		BB5901752EBCC92C0085F965 /* Release */ = {
+		BB5901F72EBDBDA80085F965 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -446,7 +301,6 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -463,124 +317,26 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		BB5901772EBCC92C0085F965 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = L25P6USMRT;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JustDoit.net.cn.MacChessTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacChess.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MacChess";
-			};
-			name = Debug;
-		};
-		BB5901782EBCC92C0085F965 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = L25P6USMRT;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JustDoit.net.cn.MacChessTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MacChess.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MacChess";
-			};
-			name = Release;
-		};
-		BB59017A2EBCC92C0085F965 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = L25P6USMRT;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JustDoit.net.cn.MacChessUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = MacChess;
-			};
-			name = Debug;
-		};
-		BB59017B2EBCC92C0085F965 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = L25P6USMRT;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = JustDoit.net.cn.MacChessUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = MacChess;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BB59014B2EBCC92A0085F965 /* Build configuration list for PBXProject "MacChess" */ = {
+		BB5901E52EBDBDA60085F965 /* Build configuration list for PBXProject "MacChess" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BB5901712EBCC92C0085F965 /* Debug */,
-				BB5901722EBCC92C0085F965 /* Release */,
+				BB5901F32EBDBDA80085F965 /* Debug */,
+				BB5901F42EBDBDA80085F965 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BB5901732EBCC92C0085F965 /* Build configuration list for PBXNativeTarget "MacChess" */ = {
+		BB5901F52EBDBDA80085F965 /* Build configuration list for PBXNativeTarget "MacChess" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				BB5901742EBCC92C0085F965 /* Debug */,
-				BB5901752EBCC92C0085F965 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BB5901762EBCC92C0085F965 /* Build configuration list for PBXNativeTarget "MacChessTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BB5901772EBCC92C0085F965 /* Debug */,
-				BB5901782EBCC92C0085F965 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		BB5901792EBCC92C0085F965 /* Build configuration list for PBXNativeTarget "MacChessUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BB59017A2EBCC92C0085F965 /* Debug */,
-				BB59017B2EBCC92C0085F965 /* Release */,
+				BB5901F62EBDBDA80085F965 /* Debug */,
+				BB5901F72EBDBDA80085F965 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -588,7 +344,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		BB59018A2EBCCA910085F965 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+		BB5901FE2EBDBDDC0085F965 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
@@ -599,12 +355,12 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		BB59018B2EBCCA910085F965 /* ComposableArchitecture */ = {
+		BB5901FF2EBDBDDC0085F965 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = BB59018A2EBCCA910085F965 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			package = BB5901FE2EBDBDDC0085F965 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = BB5901482EBCC92A0085F965 /* Project object */;
+	rootObject = BB5901E22EBDBDA60085F965 /* Project object */;
 }

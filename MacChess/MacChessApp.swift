@@ -2,17 +2,7 @@
 //  MacChessApp.swift
 //  MacChess
 //
-//  Created by stone on 2025/11/6.
-//
-
-import SwiftUI
-import SwiftData
-import ComposableArchitecture
-//
-//  MacChessApp.swift
-//  MacChess
-//
-//  Created by stone on 2025/11/06.
+//  Created by stone on 2025/11/7.
 //
 
 import SwiftUI
@@ -28,7 +18,6 @@ struct MacChessApp: App {
                     reducer: { GameFeature() }
                 )
             )
-            .frame(width: 540, height: 560)
         }
     }
 }
