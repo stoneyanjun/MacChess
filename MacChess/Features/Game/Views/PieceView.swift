@@ -2,19 +2,27 @@
 //  PieceView.swift
 //  MacChess
 //
-//  Created by stone on 2025/11/7.
+//  Created by stone on 2025/11/07.
 //
 
 import SwiftUI
 
+/// Displays a single chess piece image or fallback symbol.
 struct PieceView: View {
     let piece: Piece
-    let isFlipped: Bool   // keep for future use if needed
 
     var body: some View {
-        Text(piece.symbol)
-            .font(.system(size: 36))
-            // 🧩 Remove rotation — always upright
-            .rotationEffect(.degrees(0))
+        // Try to load the image asset; fallback to text symbol if missing
+        if let image = NSImage(named: piece.assetName) {
+            Image(nsImage: image)
+                .resizable()
+                .scaledToFit()
+                .padding(4)
+                .accessibilityLabel(Text("\(piece.color.displayName) \(piece.type.rawValue)"))
+        } else {
+            Text(piece.symbol)
+                .font(.system(size: 28))
+                .padding(4)
+        }
     }
 }

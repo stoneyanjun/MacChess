@@ -2,143 +2,127 @@
 //  MoveValidator.swift
 //  MacChess
 //
-//  Created by stone on 2025/11/7.
+//  Created by stone on 2025/11/08.
 //
 
 import Foundation
 
-/// A lightweight but correct chess move validator for all standard pieces.
-/// It enforces turn-based color logic and disallows backward pawn moves.
+/// Utility responsible for checking if a given move is legal.
+/// Stage Two: Implements basic movement rules per piece type.
 struct MoveValidator {
 
-    static func isValidMove(
-        board: [[Piece?]],
+    /// Checks whether a move is legal for the given board and player.
+    static func isLegalMove(
+        board: Board,
         from: Square,
         to: Square,
-        currentTurn: PieceColor
+        color: PieceColor
     ) -> Bool {
-        guard let piece = board[from.row][from.col] else { return false }
-        if from == to { return false }
+        // --- 1️⃣ Ensure coordinates are valid ---
+        guard (0..<8).contains(from.file),
+              (0..<8).contains(from.rank),
+              (0..<8).contains(to.file),
+              (0..<8).contains(to.rank)
+        else { return false }
 
-        // 🧠 must move your own color
-        if piece.color != currentTurn {
+        // --- 2️⃣ Ensure there is a piece at `from` ---
+        guard let piece = board.piece(at: from) else { return false }
+
+        // --- 3️⃣ Ensure piece belongs to the current player ---
+        guard piece.color == color else { return false }
+
+        // --- 4️⃣ Ensure destination is not occupied by own color ---
+        if let target = board.piece(at: to), target.color == color {
             return false
         }
 
-        // 🚫 cannot capture your own piece
-        if let targetPiece = board[to.row][to.col],
-           targetPiece.color == piece.color {
-            return false
-        }
-
-        // 🎯 dispatch by piece type
+        // --- 5️⃣ Check piece-specific movement rule ---
         switch piece.type {
-        case .pawn:
-            return validatePawn(board: board, from: from, to: to, piece: piece)
-        case .rook:
-            return validateRook(board: board, from: from, to: to)
-        case .knight:
-            return validateKnight(from: from, to: to)
-        case .bishop:
-            return validateBishop(board: board, from: from, to: to)
-        case .queen:
-            return validateQueen(board: board, from: from, to: to)
-        case .king:
-            return validateKing(from: from, to: to)
+        case .pawn:   return validatePawn(board: board, from: from, to: to, color: color)
+        case .rook:   return validateRook(board: board, from: from, to: to)
+        case .bishop: return validateBishop(board: board, from: from, to: to)
+        case .knight: return validateKnight(from: from, to: to)
+        case .queen:  return validateQueen(board: board, from: from, to: to)
+        case .king:   return validateKing(from: from, to: to)
         }
     }
 
-    // MARK: - Pawn
-    private static func validatePawn(board: [[Piece?]], from: Square, to: Square, piece: Piece) -> Bool {
-        let dir = piece.color == .white ? -1 : 1
-        let startRow = piece.color == .white ? 6 : 1
-        let dy = to.row - from.row
-        let dx = to.col - from.col
+    // MARK: - Piece rules
 
-        // 🚫 Prevent backward move
-        if (piece.color == .white && dy >= 0) || (piece.color == .black && dy <= 0) {
-            return false
-        }
+    private static func validatePawn(board: Board, from: Square, to: Square, color: PieceColor) -> Bool {
+        let direction = (color == .white) ? 1 : -1
+        let startRank = (color == .white) ? 1 : 6
+        let rankDiff = to.rank - from.rank
+        let fileDiff = abs(to.file - from.file)
 
         // Forward move (no capture)
-        if dx == 0 {
-            // Move 1 step forward
-            if dy == dir, board[to.row][to.col] == nil {
+        if fileDiff == 0 {
+            if rankDiff == direction && board.piece(at: to) == nil {
                 return true
             }
+            // First double move
+            if from.rank == startRank && rankDiff == 2 * direction {
+                let midSquare = Square(file: from.file, rank: from.rank + direction)
+                return board.piece(at: midSquare) == nil && board.piece(at: to) == nil
+            }
+            return false
+        }
 
-            // Move 2 steps from starting position
-            if from.row == startRow,
-               dy == 2 * dir,
-               board[from.row + dir][to.col] == nil,
-               board[to.row][to.col] == nil {
+        // Capture (diagonal)
+        if fileDiff == 1 && rankDiff == direction {
+            if let target = board.piece(at: to), target.color != color {
                 return true
             }
         }
-
-        // Capture diagonally
-        if abs(dx) == 1, dy == dir {
-            if let target = board[to.row][to.col], target.color != piece.color {
-                return true
-            }
-        }
-
         return false
     }
 
-    // MARK: - Rook
-    private static func validateRook(board: [[Piece?]], from: Square, to: Square) -> Bool {
-        let dy = to.row - from.row
-        let dx = to.col - from.col
-        if dy != 0 && dx != 0 { return false }
-        return pathIsClear(board: board, from: from, to: to)
+    private static func validateRook(board: Board, from: Square, to: Square) -> Bool {
+        if from.file != to.file && from.rank != to.rank { return false }
+        return isPathClear(board: board, from: from, to: to)
     }
 
-    // MARK: - Knight
+    private static func validateBishop(board: Board, from: Square, to: Square) -> Bool {
+        let fileDiff = abs(to.file - from.file)
+        let rankDiff = abs(to.rank - from.rank)
+        guard fileDiff == rankDiff else { return false }
+        return isPathClear(board: board, from: from, to: to)
+    }
+
+    private static func validateQueen(board: Board, from: Square, to: Square) -> Bool {
+        let fileDiff = abs(to.file - from.file)
+        let rankDiff = abs(to.rank - from.rank)
+        let isDiagonal = fileDiff == rankDiff
+        let isStraight = (from.file == to.file) || (from.rank == to.rank)
+        guard isDiagonal || isStraight else { return false }
+        return isPathClear(board: board, from: from, to: to)
+    }
+
     private static func validateKnight(from: Square, to: Square) -> Bool {
-        let dy = abs(to.row - from.row)
-        let dx = abs(to.col - from.col)
-        return (dx == 1 && dy == 2) || (dx == 2 && dy == 1)
+        let fileDiff = abs(to.file - from.file)
+        let rankDiff = abs(to.rank - from.rank)
+        return (fileDiff == 2 && rankDiff == 1) || (fileDiff == 1 && rankDiff == 2)
     }
 
-    // MARK: - Bishop
-    private static func validateBishop(board: [[Piece?]], from: Square, to: Square) -> Bool {
-        let dy = abs(to.row - from.row)
-        let dx = abs(to.col - from.col)
-        if dy != dx { return false }
-        return pathIsClear(board: board, from: from, to: to)
-    }
-
-    // MARK: - Queen
-    private static func validateQueen(board: [[Piece?]], from: Square, to: Square) -> Bool {
-        let dy = abs(to.row - from.row)
-        let dx = abs(to.col - from.col)
-        if dy == dx || dy == 0 || dx == 0 {
-            return pathIsClear(board: board, from: from, to: to)
-        }
-        return false
-    }
-
-    // MARK: - King
     private static func validateKing(from: Square, to: Square) -> Bool {
-        let dy = abs(to.row - from.row)
-        let dx = abs(to.col - from.col)
-        return max(dx, dy) == 1
+        let fileDiff = abs(to.file - from.file)
+        let rankDiff = abs(to.rank - from.rank)
+        return max(fileDiff, rankDiff) == 1
     }
 
-    // MARK: - Helpers
-    private static func pathIsClear(board: [[Piece?]], from: Square, to: Square) -> Bool {
-        let dx = to.col - from.col
-        let dy = to.row - from.row
-        let stepX = dx == 0 ? 0 : dx / abs(dx)
-        let stepY = dy == 0 ? 0 : dy / abs(dy)
-        var x = from.col + stepX
-        var y = from.row + stepY
+    // MARK: - Helper: check path blocking
+    private static func isPathClear(board: Board, from: Square, to: Square) -> Bool {
+        let fileStep = (to.file - from.file).signum()
+        let rankStep = (to.rank - from.rank).signum()
+        var f = from.file + fileStep
+        var r = from.rank + rankStep
 
-        while x != to.col || y != to.row {
-            if board[y][x] != nil { return false }
-            x += stepX
-            y += stepY
+        while f != to.file || r != to.rank {
+            if board.piece(at: Square(file: f, rank: r)) != nil {
+                return false
+            }
+            f += fileStep
+            r += rankStep
         }
         return true
     }

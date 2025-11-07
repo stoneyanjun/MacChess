@@ -2,72 +2,38 @@
 //  BoardView.swift
 //  MacChess
 //
-//  Created by stone on 2025/11/7.
+//  Created by stone on 2025/11/07.
 //
 
 import SwiftUI
 import ComposableArchitecture
 
+/// Displays the 8×8 chessboard grid with all squares and pieces.
+/// Stage Two: now passes the TCA store to each SquareView for interactivity.
 struct BoardView: View {
     let store: StoreOf<GameFeature>
-    let files: [String]
-    let ranks: [Int]
 
     var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            GeometryReader { geo in
-                let boardSize = min(geo.size.width, geo.size.height)
-                let squareSize = boardSize / 8
-
-                VStack(spacing: 0) {
-                    // Main board area
+            VStack(spacing: 0) {
+                // Render ranks from top (8) → bottom (1)
+                ForEach((0..<8).reversed(), id: \.self) { rank in
                     HStack(spacing: 0) {
-                        // Left rank labels
-                        VStack(spacing: 0) {
-                            ForEach(ranks, id: \.self) { rank in
-                                Text("\(rank)")
-                                    .font(.system(size: 12, weight: .bold))
-                                    .frame(width: 20, height: squareSize)
-                            }
-                        }
-
-                        // 8×8 Squares
-                        VStack(spacing: 0) {
-                            ForEach(ranks.indices, id: \.self) { rIndex in
-                                let row = viewStore.isBoardFlipped ? rIndex : (7 - rIndex)
-                                HStack(spacing: 0) {
-                                    ForEach(0..<8, id: \.self) { cIndex in
-                                        let col = viewStore.isBoardFlipped ? (7 - cIndex) : cIndex
-                                        let square = Square(row: row, col: col)
-                                        let piece = viewStore.board[row][col]
-
-                                        SquareView(
-                                            square: square,
-                                            piece: piece,
-                                            isSelected: square == viewStore.selectedSquare,
-                                            isFlipped: viewStore.isBoardFlipped
-                                        )
-                                        .frame(width: squareSize, height: squareSize)
-                                        .onTapGesture {
-                                            viewStore.send(.selectSquare(square))
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Bottom file labels
-                    HStack(spacing: 0) {
-                        Text(" ").frame(width: 20)
-                        ForEach(files, id: \.self) { file in
-                            Text(file)
-                                .font(.system(size: 12, weight: .bold))
-                                .frame(width: squareSize, height: 20)
+                        // Render files left → right (a → h)
+                        ForEach(0..<8, id: \.self) { file in
+                            let square = Square(file: file, rank: rank)
+                            SquareView(
+                                store: store,
+                                square: square,
+                                piece: viewStore.gameStatus.board.grid[rank][file]
+                            )
+                            .frame(width: 80, height: 80)  // Each square fixed 80×80 (total 640×640)
                         }
                     }
                 }
             }
+            .frame(width: 640, height: 640)
+            .border(Color(NSColor.separatorColor), width: 1)
         }
     }
 }
