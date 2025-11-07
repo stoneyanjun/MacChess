@@ -74,7 +74,7 @@ struct GameView: View {
                 }
 
                 // --- 3️⃣ Bottom controls ---
-                VStack(spacing: 12) {
+                VStack(spacing: 16) {
                     HStack {
                         Toggle("Human vs AI", isOn: viewStore.binding(
                             get: \.isHumanVsAI,
@@ -89,6 +89,15 @@ struct GameView: View {
                         ))
                         .toggleStyle(.switch)
                         .frame(width: 120)
+                        
+                        Button {
+                            viewStore.send(.undo)
+                        } label: {
+                            Label("Undo", systemImage: "arrow.uturn.backward")
+                                .font(.system(size: 18, weight: .semibold))
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.blue)
                         
                         Button {
                             viewStore.send(.restart)
