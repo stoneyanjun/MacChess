@@ -41,7 +41,7 @@ struct GameView: View {
                             VStack(spacing: 0) {
                                 ForEach(rankLabels.reversed(), id: \.self) { rank in
                                     Text("\(rank)")
-                                        .font(.system(size: 12, weight: .medium))
+                                        .font(.system(size: 18, weight: .medium))
                                         .frame(width: 20, height: 80)
                                         .foregroundColor(.secondary)
                                 }
@@ -58,7 +58,7 @@ struct GameView: View {
                             Spacer().frame(width: 20)
                             ForEach(fileLabels, id: \.self) { file in
                                 Text(file)
-                                    .font(.system(size: 12, weight: .medium))
+                                    .font(.system(size: 18, weight: .medium))
                                     .frame(width: 80)
                                     .foregroundColor(.secondary)
                             }

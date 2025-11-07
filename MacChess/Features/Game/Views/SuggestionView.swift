@@ -24,7 +24,7 @@ struct SuggestionView: View {
                     .frame(maxWidth: .infinity)
             } else if let suggestion = suggestion {
                 Text("Best move: \(suggestion.bestMove)")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 24, weight: .semibold))
                     .foregroundColor(.primary)
                     .padding(.vertical, 4)
                 if let score = suggestion.score {
