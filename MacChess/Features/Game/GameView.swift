@@ -2,14 +2,10 @@
 //  GameView.swift
 //  MacChess
 //
-//  Created by stone on 2025/11/07.
-//
 
 import SwiftUI
 import ComposableArchitecture
 
-/// The main chessboard screen.
-/// Stage 5.3: adds SuggestionView (left) and MoveHistoryView (right)
 struct GameView: View {
     let store: StoreOf<GameFeature>
 
@@ -28,16 +24,15 @@ struct GameView: View {
                 // --- 2️⃣ Main play area ---
                 HStack(alignment: .top, spacing: 12) {
 
-                    // === Left section: Stockfish suggestion ===
+                    // Left: Suggestion
                     SuggestionView(
                         suggestion: viewStore.lastEngineSuggestion,
                         isAnalyzing: viewStore.isAnalyzing
                     )
 
-                    // === Middle section: Board + labels ===
+                    // Middle: Board
                     VStack(spacing: 4) {
                         HStack(spacing: 4) {
-                            // Rank numbers (1–8)
                             VStack(spacing: 0) {
                                 ForEach(rankLabels.reversed(), id: \.self) { rank in
                                     Text("\(rank)")
@@ -47,13 +42,11 @@ struct GameView: View {
                                 }
                             }
 
-                            // Interactive chessboard
                             BoardView(store: store)
                                 .frame(width: 640, height: 640)
                                 .border(Color(NSColor.separatorColor), width: 1)
                         }
 
-                        // File letters (a–h)
                         HStack(spacing: 0) {
                             Spacer().frame(width: 20)
                             ForEach(fileLabels, id: \.self) { file in
@@ -65,7 +58,7 @@ struct GameView: View {
                         }
                     }
 
-                    // === Right section: Move history ===
+                    // Right: Move History
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Move History")
                             .font(.headline)
@@ -81,16 +74,34 @@ struct GameView: View {
                 }
 
                 // --- 3️⃣ Bottom controls ---
-                HStack {
-                    Spacer()
-                    Button {
-                        viewStore.send(.restart)
-                    } label: {
-                        Label("Reset", systemImage: "arrow.counterclockwise")
-                            .font(.system(size: 14, weight: .semibold))
+                VStack(spacing: 10) {
+                    HStack {
+                        Toggle("Human vs AI", isOn: viewStore.binding(
+                            get: \.isHumanVsAI,
+                            send: GameAction.toggleHumanVsAI
+                        ))
+                        .toggleStyle(.switch)
+                        .frame(width: 160)
+
+                        Toggle("AI plays White", isOn: viewStore.binding(
+                            get: \.isAIPlayingWhite,
+                            send: GameAction.toggleAIPlayingWhite
+                        ))
+                        .toggleStyle(.switch)
+                        .frame(width: 160)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.red)
+
+                    HStack {
+                        Spacer()
+                        Button {
+                            viewStore.send(.restart)
+                        } label: {
+                            Label("Reset", systemImage: "arrow.counterclockwise")
+                                .font(.system(size: 18, weight: .semibold))
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.red)
+                    }
                 }
                 .padding(.top, 8)
             }

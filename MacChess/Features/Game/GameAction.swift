@@ -45,4 +45,7 @@ enum GameAction: Equatable, Sendable {
     // MARK: - System / Error Handling
     /// Log or display internal errors.
     case internalError(String)
+    
+    case toggleHumanVsAI(Bool)
+    case toggleAIPlayingWhite(Bool)
 }

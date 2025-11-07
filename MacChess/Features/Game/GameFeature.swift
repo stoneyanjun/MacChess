@@ -95,6 +95,16 @@ struct GameFeature: Reducer, Sendable {
 
         case .undo, .internalError:
             return .none
+            
+        case let .toggleHumanVsAI(isOn):
+            state.isHumanVsAI = isOn
+            print("🤖 Human vs AI mode: \(isOn ? "ON" : "OFF")")
+            return .none
+
+        case let .toggleAIPlayingWhite(isWhite):
+            state.isAIPlayingWhite = isWhite
+            print("♟️ AI plays: \(isWhite ? "White" : "Black")")
+            return .none
         }
     }
 
