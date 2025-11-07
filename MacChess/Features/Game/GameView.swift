@@ -9,11 +9,10 @@ import SwiftUI
 import ComposableArchitecture
 
 /// The main chessboard screen.
-/// Stage 5.1: adds Reset button below the play area.
+/// Stage 5.3: adds SuggestionView (left) and MoveHistoryView (right)
 struct GameView: View {
     let store: StoreOf<GameFeature>
 
-    // File (column) and rank (row) labels
     private let fileLabels = ["a","b","c","d","e","f","g","h"]
     private let rankLabels = Array(1...8)
 
@@ -29,7 +28,13 @@ struct GameView: View {
                 // --- 2️⃣ Main play area ---
                 HStack(alignment: .top, spacing: 12) {
 
-                    // === Left section: Board with rank labels ===
+                    // === Left section: Stockfish suggestion ===
+                    SuggestionView(
+                        suggestion: viewStore.lastEngineSuggestion,
+                        isAnalyzing: viewStore.isAnalyzing
+                    )
+
+                    // === Middle section: Board + labels ===
                     VStack(spacing: 4) {
                         HStack(spacing: 4) {
                             // Rank numbers (1–8)
@@ -42,7 +47,7 @@ struct GameView: View {
                                 }
                             }
 
-                            // Interactive chessboard (640×640 fixed)
+                            // Interactive chessboard
                             BoardView(store: store)
                                 .frame(width: 640, height: 640)
                                 .border(Color(NSColor.separatorColor), width: 1)
