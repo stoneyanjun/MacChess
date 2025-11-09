@@ -63,8 +63,34 @@ struct GameFeature: Reducer, Sendable {
             // 4️⃣ Apply valid move & record history
             // ------------------------------------------------------------
         case let .moveAccepted(from, to):
+            let board = state.gameStatus.board
             // Apply move
             state.gameStatus.move(from: from, to: to)
+            if board.piece(at: to) != nil {
+                ChessSoundPlayer.playCaptureSound()
+            } else {
+                ChessSoundPlayer.playMoveSound()
+            }
+            
+            // ✅ 如果是王车易位，则自动移动车
+            if let piece = state.gameStatus.board.piece(at: to),
+               piece.type == .king,
+               abs(to.file - from.file) == 2 {
+                let rank = to.rank
+                if to.file == 6 {
+                    // 王翼易位 O-O
+                    let rookFrom = Square(file: 7, rank: rank)
+                    let rookTo = Square(file: 5, rank: rank)
+                    state.gameStatus.move(from: rookFrom, to: rookTo)
+                    print("♔ Castling (King-side) executed")
+                } else if to.file == 2 {
+                    // 后翼易位 O-O-O
+                    let rookFrom = Square(file: 0, rank: rank)
+                    let rookTo = Square(file: 3, rank: rank)
+                    state.gameStatus.move(from: rookFrom, to: rookTo)
+                    print("♔ Castling (Queen-side) executed")
+                }
+            }
             
             // Record move
             let record = MoveRecord(
@@ -74,6 +100,7 @@ struct GameFeature: Reducer, Sendable {
                 to: to
             )
             state.moveHistory.append(record)
+            state.lastMoveTo = to
             
             // Update turn
             if state.currentTurn == .black { state.moveIndex += 1 }

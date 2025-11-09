@@ -10,7 +10,9 @@ import Foundation
 /// The TCA-managed state for the Game feature.
 /// Stage 5.4: adds Human vs AI mode flags to Stage 5.1.
 struct GameState: Equatable, Sendable {
-
+    
+    var lastMoveTo: Square?
+    
     // MARK: - Domain model
     /// The current chessboard and game status.
     var gameStatus: GameStatus = GameStatus()

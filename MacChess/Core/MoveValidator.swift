@@ -43,7 +43,7 @@ struct MoveValidator {
         case .bishop: return validateBishop(board: board, from: from, to: to)
         case .knight: return validateKnight(from: from, to: to)
         case .queen:  return validateQueen(board: board, from: from, to: to)
-        case .king:   return validateKing(from: from, to: to)
+        case .king:   return validateKing(board: board, from: from, to: to, color: color)
         }
     }
 
@@ -104,10 +104,57 @@ struct MoveValidator {
         return (fileDiff == 2 && rankDiff == 1) || (fileDiff == 1 && rankDiff == 2)
     }
 
-    private static func validateKing(from: Square, to: Square) -> Bool {
+    // MARK: - King movement (with castling)
+    private static func validateKing(board: Board, from: Square, to: Square, color: PieceColor) -> Bool {
         let fileDiff = abs(to.file - from.file)
         let rankDiff = abs(to.rank - from.rank)
-        return max(fileDiff, rankDiff) == 1
+
+        // 普通移动（单格）
+        if max(fileDiff, rankDiff) == 1 {
+            return true
+        }
+
+        // 特殊：王车易位（横向两格）
+        if rankDiff == 0 && fileDiff == 2 {
+            return canCastle(board: board, from: from, to: to, color: color)
+        }
+
+        return false
+    }
+
+    // MARK: - Castling validation
+    /// Checks if castling is possible (ignores "attacked squares" for now)
+    private static func canCastle(board: Board, from: Square, to: Square, color: PieceColor) -> Bool {
+        let rank = (color == .white) ? 0 : 7
+
+        // 起始位置必须是原始王位置 e1/e8
+        guard from.rank == rank, from.file == 4 else { return false }
+
+        let isKingSide = (to.file == 6)
+        let rookFile = isKingSide ? 7 : 0
+        let step = isKingSide ? 1 : -1
+
+        // 确保目标格是 g1/g8 或 c1/c8
+        guard to.rank == rank, to.file == 6 || to.file == 2 else { return false }
+
+        // 检查国王与车之间无子
+        var file = from.file + step
+        while file != rookFile {
+            if board.piece(at: Square(file: file, rank: rank)) != nil {
+                return false
+            }
+            file += step
+        }
+
+        // 检查车是否存在且颜色匹配
+        guard let rook = board.piece(at: Square(file: rookFile, rank: rank)),
+              rook.type == .rook,
+              rook.color == color else {
+            return false
+        }
+
+        // ✅ 不检测“是否被将军”与“经过攻击格” (后续可扩展)
+        return true
     }
 
     // MARK: - Helper: check path blocking

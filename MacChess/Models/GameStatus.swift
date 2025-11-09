@@ -14,6 +14,12 @@ struct GameStatus: Equatable, Codable, Sendable {
     /// The complete chessboard, including all pieces.
     var board: Board
 
+        // 可选扩展：用于记录移动状态
+    var hasWhiteKingMoved = false
+    var hasBlackKingMoved = false
+    var hasWhiteRookMoved = [false, false] // [Queen-side, King-side]
+    var hasBlackRookMoved = [false, false]
+    
     /// Whose turn it is to move (for domain reference only).
     /// The authoritative turn is stored in GameState.currentTurn.
     var turn: PieceColor
