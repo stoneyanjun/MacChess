@@ -46,7 +46,7 @@ actor StockfishEngine {
     }
 
     // MARK: - Analysis
-    func analyze(moves: [MoveRecord], depth: Int = 18) async -> EngineSuggestion? {
+    func analyze(moves: [MoveRecord], depth: Int = 23) async -> EngineSuggestion? {
         guard isStarted else {
             print("⚠️ [StockfishEngine] Engine not started, starting now…")
             await start()

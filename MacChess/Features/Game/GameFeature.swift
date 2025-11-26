@@ -100,6 +100,7 @@ struct GameFeature: Reducer, Sendable {
                 to: to
             )
             state.moveHistory.append(record)
+            state.lastMoveFrom = from
             state.lastMoveTo = to
             
             // Update turn
@@ -135,7 +136,7 @@ struct GameFeature: Reducer, Sendable {
             return .run { [moves = state.moveHistory] send in
                 let moveString = moves.map(\.notation).joined(separator: " ")
                 print("📤 Sending moves to Stockfish: \(moveString.isEmpty ? "(startpos)" : moveString)")
-                let suggestion = await engine.analyze(moves: moves, depth: 18)
+                let suggestion = await engine.analyze(moves: moves, depth: 23)
                 await send(.receiveEngineSuggestion(suggestion))
             }
             
@@ -191,7 +192,12 @@ struct GameFeature: Reducer, Sendable {
             // ------------------------------------------------------------
         case .restart:
             state = GameState()
-            return .none
+            return .run { [engine] send in
+                // 完全停止 Stockfish
+                await engine.stop()
+                // 重新启动 Stockfish
+                await engine.start()
+            }
             // ------------------------------------------------------------
             // 🔄 Undo last move
             // ------------------------------------------------------------

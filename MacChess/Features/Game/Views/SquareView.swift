@@ -29,6 +29,13 @@ struct SquareView: View {
                         .aspectRatio(1, contentMode: .fit)
                 }
 
+                // --- Highlight last move source ---
+                if viewStore.lastMoveFrom == square {
+                    Rectangle()
+                        .fill(Color.purple.opacity(0.1))
+                        .aspectRatio(1, contentMode: .fit)
+                }
+
                 // --- Selection / Legal move highlights ---
                 if viewStore.invalidMoveFlash && viewStore.selectedSquare == square {
                     Rectangle().stroke(Color.red, lineWidth: 4)

@@ -11,6 +11,7 @@ import Foundation
 /// Stage 5.4: adds Human vs AI mode flags to Stage 5.1.
 struct GameState: Equatable, Sendable {
     
+    var lastMoveFrom: Square?
     var lastMoveTo: Square?
     
     // MARK: - Domain model
